@@ -96,18 +96,18 @@ let rec annotate : cmd -> Cmd.t =
   fun c ->
   let recur (c:cmd) : Cmd.t = match c with
     | Skip -> Skip
-    | Assign (x, a) -> Assign (Name.nondet (), x, a)
-    | Set (a, b, c) -> Set (Name.nondet (), a, b, c)
+    | Assign (x, a) -> Assign (Name.gensym (), x, a)
+    | Set (a, b, c) -> Set (Name.gensym (), a, b, c)
     | Seq (c1, c2) ->
        Seq (annotate c1, annotate c2)
     | If (b, c1, c2) ->
        If (b, annotate c1, annotate c2)
     | While (b, c) ->
-       While (Name.nondet (), b, annotate c)
+       While (Name.gensym (), b, annotate c)
     (*| AWhile (a, b, c) ->
-       AWhile ((Name.nondet (), a), b, annotate ~verbose c)*)
+       AWhile ((Name.gensym (), a), b, annotate ~verbose c)*)
   in
-  let nm = Name.nondet () in
+  let nm = Name.gensym () in
   let nm1, nm2 = Name.fork nm in
   let r = recur c in
   let cell = Cmd.Art.cell nm1 r in
@@ -229,7 +229,7 @@ module Experiments(Eval : Eval.S) : EXP = struct
     out
 
   let test_cmd_mutation (cmd : Cmd.t) r0 h0 (mutator : Cmd.t -> unit) =
-    let root_loop = Name.nondet () in
+    let root_loop = Name.gensym () in
     (*let out = open_out "results/viz_out" in*)
     (if !verbose then
         (print_endline "cmd:";

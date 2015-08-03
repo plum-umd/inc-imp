@@ -209,7 +209,7 @@ module Eval = struct
   let name_of_int_list nm ints =
     PrimList.fold_left
       (fun nm i ->
-         Name.pair (Name.gensym (string_of_int i)) nm)
+         Name.pair (Name.of_string (string_of_int i)) nm)
       nm ints
 
   module type S = sig
@@ -231,7 +231,7 @@ module Eval = struct
     let ceval =
       let mfn =
         AState.mk_mfn
-          (Name.gensym "Implang.CEval#ceval")
+          (Name.of_string "Implang.CEval#ceval")
           (module Types.Tuple6(Name)(Types.Bool)(Types.IntList)(Env)(Heap)(Cmd))
           (fun mfn (outernm, verbose, coord, r, h, cmd) ->
              let ceval outernm coord r h c =
@@ -320,7 +320,7 @@ module Eval = struct
     let ceval_jump : CevalData.t -> CevalData.t =
       let mfn =
         CevalArt.mk_mfn
-          (Name.gensym "Implang.Balanced#ceval_jump")
+          (Name.of_string "Implang.Balanced#ceval_jump")
           (module CevalData)
           (fun mfn ((InR (outernm, verbose, coord, r, h, cmd)) as inp) ->
              (*let ceval outernm coord r h c =
@@ -399,7 +399,7 @@ module Eval = struct
       and ubound_init = max_int in
       let loop =
         CevalArt.mk_mfn
-          (Name.gensym "Implang.Balanced#loop")
+          (Name.of_string "Implang.Balanced#loop")
           (module Types.Tuple3(Types.Int)(Types.Int)(CevalData))
           (fun loop (lbound, ubound, cd) -> match cd with
              | InL _ -> cd
@@ -416,7 +416,7 @@ module Eval = struct
       in
       let state_thunk : Name.t -> CevalData.t -> AState.t =
         let ident =
-          AState.mk_mfn (Name.gensym "state_thunk")
+          AState.mk_mfn (Name.of_string "state_thunk")
             (module CevalData)
             (fun _ c -> driver c)
         in

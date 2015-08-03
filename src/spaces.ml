@@ -52,7 +52,7 @@ module Map = struct
 
     let ext : Name.t -> t -> k -> v -> t =
       let list_mfn =
-        Art.mk_mfn (Name.gensym "sto") (module St.List) (fun _ l -> l)
+        Art.mk_mfn (Name.of_string "sto") (module St.List) (fun _ l -> l)
       in
       fun nm s x v ->
         let nm1, nm2 = Name.fork nm in
@@ -91,7 +91,7 @@ end = struct
     let prefill ?(min_depth = 1) : k list -> t =
       List.fold_left
         (fun r x ->
-           let nm = (*Name.gensym x*) Name.nondet () in
+           let nm = (*Name.gensym x*) Name.gensym () in
            ext nm r x min_int)
         (mt ~min_depth)
 
