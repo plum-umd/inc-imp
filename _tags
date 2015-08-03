@@ -1,0 +1,3 @@
+<src> : include
+true: thread
+true: package(adapton, str, ppx_deriving.std)
