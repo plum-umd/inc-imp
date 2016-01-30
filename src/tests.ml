@@ -31,7 +31,7 @@ let time_string : string =
 
 module type S = sig val test : unit -> unit end
 module Make(ArtLib : ArtLib.S) = struct
-  
+
 include Lang.Make(ArtLib)
 
 let rec dfs (acc : Cmd.t -> Name.t option)
@@ -111,7 +111,7 @@ let rec annotate : cmd -> Cmd.t =
   let nm1, nm2 = Name.fork nm in
   let r = recur c in
   let cell = Cmd.Art.cell nm1 r in
-  let cmd = CmdGen.Name (nm2, CmdGen.Art cell) in
+  let cmd = CmdP.Name (nm2, CmdP.Art cell) in
   (if !verbose then
       Printf.printf "| %s | %s | %s | \n" (Name.show nm) (Cmd.show cmd) (Cmd.show r)) ;
   cmd

@@ -23,9 +23,9 @@ module Map = struct
 
     include Trie.Map.Make(Name)(ArtLib)(K)(V)
 
-    let mt ?(min_depth = 1) = empty ~min_depth
+    let mt ?(min_depth = 1) = empty ~min_depth ~art_ifreq:(`Const 2.)
     let lookup = find
-    let ext = nadd
+    let ext = add
 
   end
 

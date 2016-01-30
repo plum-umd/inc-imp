@@ -12,6 +12,7 @@ let alloc : int * heap -> (int * heap) =
     let n = *)
 
 open Adapton
+module IntList = Types.List(Types.Int)
 
 module Make(ArtLib : ArtLib.S) = struct
 
@@ -76,7 +77,7 @@ let string_of_cmd : cmd -> string =
     |     While (b, c)       -> Printf.sprintf "(while %s\n%s)" (string_of_bexpr b) (loop c)
   in loop
 
-module CmdGen =
+module CmdP =
 struct
   type 'a t =
     | Skip
@@ -110,10 +111,10 @@ struct
 end
 
 module Cmd : sig
-  include Articulated.Fix(ArtLib)(Name)(CmdGen).S
+  include Articulated.Fix(ArtLib)(Name)(CmdP).S
   val name_of : t -> name option
 end = struct
-  include Articulated.Fix(ArtLib)(Name)(CmdGen)
+  include Articulated.Fix(ArtLib)(Name)(CmdP)
   let name_of : t -> name option = function
     | Skip _ | Seq _ | If _ | Art _ -> None
     | Assign (nm, _, _) | Set (nm, _, _, _) | While (nm, _, _) -> Some nm
@@ -232,7 +233,7 @@ module Eval = struct
       let mfn =
         AState.mk_mfn
           (Name.of_string "Implang.CEval#ceval")
-          (module Types.Tuple6(Name)(Types.Bool)(Types.IntList)(Env)(Heap)(Cmd))
+          (module Types.Tuple6(Name)(Types.Bool)(IntList)(Env)(Heap)(Cmd))
           (fun mfn (outernm, verbose, coord, r, h, cmd) ->
              let ceval outernm coord r h c =
                mfn.AState.mfn_data (outernm,verbose,coord,r,h,c) in
@@ -244,7 +245,7 @@ module Eval = struct
                   Printf.printf "| ceval | %s || %s | %s | %s | %s | %s \n"
                     (Name.show nm)
                     (Name.show outernm)
-                    (Types.IntList.show coord)
+                    (IntList.show coord)
                     (Env.show r)
                     (Heap.show h)
                     (Cmd.show cmd)) ;
@@ -314,7 +315,7 @@ module Eval = struct
     module CevalData =
       Types.Sum2
         (State)
-        (Types.Tuple6(Name)(Types.Bool)(Types.IntList)(Env)(Heap)(Cmd))
+        (Types.Tuple6(Name)(Types.Bool)(IntList)(Env)(Heap)(Cmd))
     module CevalArt = ArtLib.MakeArt(Name)(CevalData)
 
     let ceval_jump : CevalData.t -> CevalData.t =
@@ -333,7 +334,7 @@ module Eval = struct
                   Printf.printf "| ceval | %s || %s | %s | %s | %s | %s \n"
                     (Name.show nm)
                     (Name.show outernm)
-                    (Types.IntList.show coord)
+                    (IntList.show coord)
                     (Env.show r)
                     (Heap.show h)
                     (Cmd.show cmd)) ;
@@ -393,7 +394,7 @@ module Eval = struct
           if n mod 2 = 1
           then loop (acc+1) (n lsr 1)
           else acc in
-        loop 0 (Types.IntList.hash (Cmd.hash 42 (* <-- magic seed *) exp) is)
+        loop 0 (IntList.hash (Cmd.hash 42 (* <-- magic seed *) exp) is)
       in
       let lbound_init = ~-1
       and ubound_init = max_int in
