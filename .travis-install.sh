@@ -91,7 +91,7 @@ install_on_linux () {
   RREPO="http://lib.stat.cmu.edu/R/CRAN"
   PKGS=(reshape2 dplyr)
   for pkg in $PKGS ; do
-      R -e "install.packages(\"$pkg\", repo=\"$RREPO\")"
+      sudo R -e "install.packages(\"$pkg\", repo=\"$RREPO\")"
   done
 
   echo "Installing python2"
