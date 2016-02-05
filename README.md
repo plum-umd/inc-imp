@@ -1,4 +1,5 @@
-An incremental IMP interpreter, built using Adapton.
+* An incremental IMP interpreter, built using Adapton. [![Build Status](https://travis-ci.org/plum-umd/inc-imp.svg?branch=master)](https://travis-ci.org/plum-umd/inc-imp)
+
 
 Requires:
 - ocaml 4.02.0+
