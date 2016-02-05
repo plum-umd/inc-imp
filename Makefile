@@ -3,8 +3,7 @@
 default: clean tests.native
 
 tests.native:
-	eval $(shell opam config env)
-	ocamlbuild -use-ocamlfind tests.native
+	eval $$(opam config env) ocamlbuild -use-ocamlfind tests.native
 
 test: tests.native
 	python test.py
